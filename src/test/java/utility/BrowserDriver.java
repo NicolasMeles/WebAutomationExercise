@@ -1,10 +1,16 @@
 package utility;
 
 import org.apache.commons.exec.util.StringUtils;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -53,6 +59,20 @@ public class BrowserDriver {
         else if(Objects.equals(user, "standard_user")){
             userLogin(user);
         }
+    }
+
+    public void takeScreenShot(String fname) throws Exception {
+        String dateAndTime = checkDateAndTime();
+        File scrFile = ((TakesScreenshot) BrowserDriver.driver).getScreenshotAs(OutputType.FILE);
+        String imageFileDir = System.getProperty("selenium.screenshot.dir");
+        FileUtils.copyFile(scrFile, new File(imageFileDir, fname + "-" + dateAndTime +  ".png"));
+    }
+
+    public String checkDateAndTime(){
+        Date dataHoraAtual = new Date();
+        String data = new SimpleDateFormat("ddMMyy").format(dataHoraAtual);
+        String hora = new SimpleDateFormat("HHmm").format(dataHoraAtual);
+        return data+"-"+hora;
     }
 
 }

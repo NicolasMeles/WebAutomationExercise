@@ -8,9 +8,7 @@ import utility.BrowserDriver;
 import java.time.Duration;
 
 
-
 public class Purchase extends BrowserDriver {
-
 
     @Given("user is logged on Swag Labs")
     public void userIsLoggedOnSwagLabs() {
@@ -20,11 +18,13 @@ public class Purchase extends BrowserDriver {
     }
 
     @And("adding products to the cart")
-    public void addingProductsToTheCart() {
+    public void addingProductsToTheCart() throws Exception {
         assignVariables();
         driver.findElement(By.name("add-to-cart-sauce-labs-backpack")).click();
         driver.findElement(By.name("add-to-cart-sauce-labs-bike-light")).click();
+        takeScreenShot("TelaDeLogin");
         driver.findElement(By.className("shopping_cart_link")).click();
+        takeScreenShot("TelaHomePage");
         boolean validateFirstProductName = backpackName.equals(driver.findElement(By.xpath("//a[@id='item_4_title_link']//div[@class='inventory_item_name']")).getText());
         boolean validateFirstProductValue = backpackValue.equals(driver.findElement(By.xpath("//button[@name='remove-sauce-labs-backpack']/ancestor::div[@class='item_pricebar']//div[@class='inventory_item_price']")).getText());
         boolean validateSecondProductName = bikeLightName.equals(driver.findElement(By.xpath("//a[@id='item_0_title_link']//div[@class='inventory_item_name']")).getText());
@@ -37,12 +37,15 @@ public class Purchase extends BrowserDriver {
     }
 
     @When("buying products of the cart")
-    public void buyingProductsOfTheCart() {
+    public void buyingProductsOfTheCart() throws Exception {
+        takeScreenShot("TelaDeCheckout");
         driver.findElement(By.name("checkout")).click();
+        takeScreenShot("TelaDeDadosDoCliente");
         driver.findElement(By.name("firstName")).sendKeys("Test");
         driver.findElement(By.name("lastName")).sendKeys("Test");
         driver.findElement(By.name("postalCode")).sendKeys("0000000");
         driver.findElement(By.name("continue")).click();
+        takeScreenShot("TelaDeSubtotal");
         java.lang.String totalValueString = driver.findElement(By.className("summary_subtotal_label")).getText();
         verifyValues(backpackValue, bikeLightValue, totalValueString);
         driver.findElement(By.name("finish")).click();
@@ -50,8 +53,8 @@ public class Purchase extends BrowserDriver {
     }
     
     @Then("products will be bought successfully")
-    public void productsWillBeBoughtSuccessfully() {
-
+    public void productsWillBeBoughtSuccessfully() throws Exception {
+        takeScreenShot("TelaDeConfirmacaoDeCompra");
         driver.findElement(By.xpath("//img[@class='pony_express']")).isDisplayed();
         driver.findElement(By.xpath("//h2[@class='complete-header']")).isDisplayed();
         driver.findElement(By.xpath("//div[@class='complete-text']")).isDisplayed();
@@ -60,7 +63,8 @@ public class Purchase extends BrowserDriver {
     }
     
     @And("user will logout of the website")
-    public void userWillLogoutOfTheWebsite() {
+    public void userWillLogoutOfTheWebsite() throws Exception {
+        takeScreenShot("TelaDeLogout");
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@id='logout_sidebar_link']")));
         driver.findElement(By.xpath("//a[@id='logout_sidebar_link']")).click();
